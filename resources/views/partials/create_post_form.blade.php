@@ -63,7 +63,7 @@
                 <div class="sm:col-span-3">
                     <label for="image" class="block leading-6 text-gray-900 font-bold text-xl">Image</label>
                     <div class="mt-2">
-                        <input type="file" name="image" id="image" class="form-control">
+                        <input type="file" name="image" id="image" class="">
                     </div>
                     @error('image')
                         <div class="text-sm text-red-600">{{ $message }}</div>

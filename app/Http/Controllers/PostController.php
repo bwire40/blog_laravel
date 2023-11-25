@@ -37,15 +37,16 @@ class PostController extends Controller
         // 1. validate data
         $validated = $request->validate([
             "title" => "required|max:30|min:5|unique:posts",
-            "content" => "required|min:5|max:1000",
+            "content" => "required|min:5|",
             "category" => "required",
-            'image' => "required|image|max:2048"
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:5128'
         ]);
 
         // image path
-        $imagePath = $request->file('image')->store('public/images');
+        $imagePath = time() . '.' . $request->image->extension();
+        $request->image->storeAs('public/images', $imagePath);
         // 2. create post
-        $validated = Post::create([
+        Post::create([
             "title" => $validated["title"],
             "content" => $validated["content"],
             "category" => $validated["category"],
@@ -62,7 +63,10 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        //
+
+
+        //show a single post
+        return view("posts.show", compact("post"));
     }
 
     /**
@@ -86,6 +90,8 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        //destroy the post
+        $post->delete();
+        return redirect()->route("home")->with("success", "Post deleted Successfully!");
     }
 }
