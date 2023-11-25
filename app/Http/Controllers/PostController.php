@@ -13,7 +13,8 @@ class PostController extends Controller
     public function index()
     {
         //
-        return view("posts.index");
+        $posts = Post::orderBy("created_at", "desc")->paginate(5);
+        return view("posts.index", compact("posts"));
     }
 
     /**
@@ -30,8 +31,30 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
-        // return redirect()->route("posts.create");
+        //store our post
+
+
+        // 1. validate data
+        $validated = $request->validate([
+            "title" => "required|max:30|min:5|unique:posts",
+            "content" => "required|min:5|max:1000",
+            "category" => "required",
+            'image' => "required|image|max:2048"
+        ]);
+
+        // image path
+        $imagePath = $request->file('image')->store('public/images');
+        // 2. create post
+        $validated = Post::create([
+            "title" => $validated["title"],
+            "content" => $validated["content"],
+            "category" => $validated["category"],
+            "image" => $imagePath,
+
+        ]);
+
+        // dump($validated);
+        return redirect()->route("posts.create")->with("success", "Post Created Successfully!");
     }
 
     /**

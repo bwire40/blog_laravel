@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Post;
 use Illuminate\Http\Request;
 
 class GuestController extends Controller
@@ -9,7 +10,10 @@ class GuestController extends Controller
     //
     public function index()
     {
-        return view("home");
+
+        //
+        $posts = Post::orderBy("created_at", "desc")->paginate(100);
+        return view("home", compact("posts"));
     }
 
     public function shop()
