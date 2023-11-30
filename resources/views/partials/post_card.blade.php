@@ -32,13 +32,15 @@
                     class="uppercase text-gray-800 hover:text-black">Continue Reading <i
                         class="fas fa-arrow-right"></i></a>
 
-                <div>
-                    <form action="{{ secure_url(route('posts.destroy', $post->id)) }}" method="post">
+                <div class="flex items-center justify-center w-1/3 py-4">
+                    <form action="{{ secure_url(route('posts.destroy', $post->id)) }}" method="post" class="w-full ">
                         @csrf
                         @method('delete')
                         <button type="submit" class="text-red-500"><x-icons.trash /></button>
                     </form>
                     {{-- <a href="" class="text-red-500"><x-icons.trash /></a> --}}
+                    <a href="{{ secure_url(route('posts.edit', $post->id)) }}">
+                        <button class="text-red-500 w-full"><x-icons.pencil /></button></a>
                 </div>
             </div>
         </article>

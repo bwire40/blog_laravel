@@ -18,7 +18,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('category');
-            $table->string('content');
+            $table->text('content');
             $table->unsignedInteger('likes')->nullable(true);
             $table->text('image');
             $table->timestamps();

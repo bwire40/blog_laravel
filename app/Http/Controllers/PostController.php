@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
+use illuminate\Support\Str;
 
 class PostController extends Controller
 {
@@ -14,6 +15,7 @@ class PostController extends Controller
     {
         //
         $posts = Post::orderBy("created_at", "desc")->paginate(5);
+        // $markdown = Str::markdown($posts->content);
         return view("posts.index", compact("posts"));
     }
 
@@ -36,7 +38,7 @@ class PostController extends Controller
 
         // 1. validate data
         $validated = $request->validate([
-            "title" => "required|max:30|min:5|unique:posts",
+            "title" => "required|max:100|min:5|unique:posts",
             "content" => "required|min:5|",
             "category" => "required",
             'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:5128'
@@ -74,7 +76,9 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        //
+        //edit the post
+        $editing = true;
+        return view("posts.edit", compact("post", "editing", "post"));
     }
 
     /**
@@ -83,6 +87,20 @@ class PostController extends Controller
     public function update(Request $request, Post $post)
     {
         //
+        // 1. validate data
+        $validated = $request->validate([
+            "title" => "required|max:100|min:5|unique:posts",
+            "content" => "required|min:5|",
+            "category" => "required",
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:5128'
+        ]);
+
+        // image path
+        $imagePath = time() . '.' . $request->image->extension();
+        $request->image->storeAs('public/images', $imagePath);
+
+        $post->update($validated);
+        return redirect()->route('posts.show')->with('success', 'Post Edited Successfully!');
     }
 
     /**
